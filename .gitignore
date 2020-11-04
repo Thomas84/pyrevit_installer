@@ -4,3 +4,4 @@
 # Release and installer files
 dist/
 build/
+*.spec
