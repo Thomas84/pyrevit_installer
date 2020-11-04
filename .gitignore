@@ -1,0 +1,8 @@
+# ignore pycharm files
+**/.idea
+
+# Release and installer files
+dist/
+build/
+*.dll
+
