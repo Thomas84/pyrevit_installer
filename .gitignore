@@ -4,5 +4,3 @@
 # Release and installer files
 dist/
 build/
-*.dll
-
