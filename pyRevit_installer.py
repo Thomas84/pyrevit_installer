@@ -7,20 +7,9 @@ clr.AddReference("LibGit2Sharp")
 from LibGit2Sharp import Repository, Commands, FetchOptions
 from pathlib import Path
 import colorful as col
-import git
 
 
-def clone_repo(name):
-    print(f"INFO: git clone: {name}")
-    target_path = PROG_DATA / name
-    if target_path.exists():
-        print(f"INFO: repo {name} already exists at: {target_path}")
-        return
-    git.Repo.clone_from(url, target_path)
-    print(f"successfully cloned repo: {name}")
-
-
-def dot_clone_repo(name, url):
+def clone_repo(name, url):
     print(f"INFO: git clone: {name}")
     target_path = PROG_DATA / name
     if target_path.exists():
@@ -30,23 +19,7 @@ def dot_clone_repo(name, url):
     print(f"successfully cloned repo: {name}")
 
 
-def pull_repo(name):
-    print(f"INFO: git pull: {name}")
-    target_path = PROG_DATA / name
-    repo = git.Repo(target_path)
-    origin = repo.remotes.origin
-    origin.pull()
-
-
 def fetch_repo(name):
-    print(f"INFO: git fetch: {name}")
-    target_path = PROG_DATA / name
-    repo = git.Repo(target_path)
-    for remote in repo.remotes:
-        remote.fetch()
-
-
-def dot_fetch_repo(name):
     print(f"INFO: git fetch: {name}")
     target_path = PROG_DATA / name
     repo = Repository(str(target_path))
@@ -129,19 +102,16 @@ tooltip_debug_info = false
 clones = {"pyrevit_erne":"C:\\ProgramData\\pyrevit"}
 """
 
-
 PROG_DATA = Path("C:/ProgramData")
 RVT_ADDINS_ROOT = PROG_DATA / "Autodesk" / "Revit" / "Addins"
 PYREVIT_CONFIG_DIR = Path().home() / "AppData" / "Roaming" / "pyRevit"
 
-print(col.bold_green("welcome to Erne Holzbau pyRevit installer!"))
+print(col.bold_green("\nwelcome to Erne Holzbau pyRevit installer!"))
 
 for repo_name, url in REPOS.items():
     print(f"\n_____ {col.cyan(repo_name)}")
-    dot_clone_repo(repo_name, url)
-    dot_fetch_repo(repo_name)
-    #clone_repo(repo_name)
-    #fetch_repo(repo_name)
+    clone_repo(repo_name, url)
+    fetch_repo(repo_name)
 
 create_pyrevit_config()
 create_rvt_addins()
