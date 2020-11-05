@@ -1,4 +1,12 @@
+import clr
+clr.AddReference("System")
+import System
+clr.AddReference("System.Collections")
+from System.Collections.Generic import List
+clr.AddReference("LibGit2Sharp")
+from LibGit2Sharp import Repository, Commands, FetchOptions
 from pathlib import Path
+import colorful as col
 import git
 
 
@@ -9,6 +17,16 @@ def clone_repo(name):
         print(f"INFO: repo {name} already exists at: {target_path}")
         return
     git.Repo.clone_from(url, target_path)
+    print(f"successfully cloned repo: {name}")
+
+
+def dot_clone_repo(name, url):
+    print(f"INFO: git clone: {name}")
+    target_path = PROG_DATA / name
+    if target_path.exists():
+        print(f"INFO: repo {name} already exists at: {target_path}")
+        return
+    Repository.Clone(url, str(target_path))
     print(f"successfully cloned repo: {name}")
 
 
@@ -28,16 +46,32 @@ def fetch_repo(name):
         remote.fetch()
 
 
+def dot_fetch_repo(name):
+    print(f"INFO: git fetch: {name}")
+    target_path = PROG_DATA / name
+    repo = Repository(str(target_path))
+    #ref_specs = List[System.String]()
+    #remote = repo.Network.Remotes["origin"]
+    #ref_specs = remote.get_RefSpecs()
+    Commands.Fetch(
+        repo,
+        "origin",
+        List[System.String](),
+        FetchOptions(),
+        "",
+    )
+
+
 def create_rvt_addins(overwrite=False):
     for node in RVT_ADDINS_ROOT.iterdir():
         rvt_version = node.name
         pyrvt_addin = node / "pyRevit.addin"
         if not pyrvt_addin.exists():
             print(f"INFO: installing addin for rvt {rvt_version}")
-            write_config(pyrvt_addin, addin_txt)
+            write_config(pyrvt_addin, pyrevit_addin_txt)
         elif overwrite:
             print(f"INFO: re-installing addin for rvt {rvt_version}")
-            write_config(pyrvt_addin, addin_txt)
+            write_config(pyrvt_addin, pyrevit_addin_txt)
         else:
             print(f"INFO: pyRevit addin for rvt {rvt_version} exists already")
 
@@ -58,11 +92,12 @@ def write_config(path, content):
 
 
 REPOS = {
+    "rvt_detector" :"https://github.com/frederic-beaupere/rvt_detector",
     "pyrevit":      "https://github.com/erneagholzbau/pyrevit",
     "pyRevit_erne": "https://github.com/erneagholzbau/pyrevit_erne",
 }
 
-addin_txt = r"""<?xml version="1.0" encoding="utf-8" standalone="no"?>
+pyrevit_addin_txt = r"""<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <RevitAddIns>
     <AddIn Type = "Application">
         <Name>PyRevitLoader</Name>
@@ -73,7 +108,6 @@ addin_txt = r"""<?xml version="1.0" encoding="utf-8" standalone="no"?>
     </AddIn>
 </RevitAddIns>
 """
-
 pyrevit_config_txt = """
 [core]
 outputstylesheet = "C:\\ProgramData\\pyrevit\\pyrevitlib\\pyrevit\\output\\outputstyles.css"
@@ -100,15 +134,17 @@ PROG_DATA = Path("C:/ProgramData")
 RVT_ADDINS_ROOT = PROG_DATA / "Autodesk" / "Revit" / "Addins"
 PYREVIT_CONFIG_DIR = Path().home() / "AppData" / "Roaming" / "pyRevit"
 
-print("welcome to Erne Holzbau pyRevit installer!")
+print(col.bold_green("welcome to Erne Holzbau pyRevit installer!"))
 
 for repo_name, url in REPOS.items():
-    print(f"\n_____ {repo_name}")
-    clone_repo(repo_name)
-    fetch_repo(repo_name)
+    print(f"\n_____ {col.cyan(repo_name)}")
+    dot_clone_repo(repo_name, url)
+    dot_fetch_repo(repo_name)
+    #clone_repo(repo_name)
+    #fetch_repo(repo_name)
 
 create_pyrevit_config()
 create_rvt_addins()
 
-print("\ninstall successful!")
+print(col.bold_green("\ninstall successful!"))
 input("press enter key to end script")
