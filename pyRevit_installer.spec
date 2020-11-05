@@ -6,10 +6,10 @@ block_cipher = None
 a = Analysis(['pyRevit_installer.py'],
              pathex=[],
              binaries=[
-                ( 'LibGit2Sharp.dll', '.' ),
-                ( 'git2-106a5f2.dll', '.' )
+                ( 'deps\\LibGit2Sharp.dll', '.' ),
+                ( 'deps\\git2-106a5f2.dll', '.' )
              ],
-             datas= [ ('rgb.txt', 'colorful\\data\\' ) ],
+             datas= [ ('deps\\rgb.txt', 'colorful\\data\\' ) ],
              hiddenimports=['clr'],
              hookspath=[],
              runtime_hooks=[],
