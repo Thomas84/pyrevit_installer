@@ -4,7 +4,9 @@ import System
 clr.AddReference("System.Collections")
 from System.Collections.Generic import List
 clr.AddReference("LibGit2Sharp")
-from LibGit2Sharp import Repository, Commands, FetchOptions
+from LibGit2Sharp import Repository, Commands
+from LibGit2Sharp import FetchOptions, PullOptions
+from LibGit2Sharp import Signature, Identity
 from pathlib import Path
 import colorful as col
 
@@ -23,9 +25,6 @@ def fetch_repo(name):
     print(f"INFO: git fetch: {name}")
     target_path = PROG_DATA / name
     repo = Repository(str(target_path))
-    #ref_specs = List[System.String]()
-    #remote = repo.Network.Remotes["origin"]
-    #ref_specs = remote.get_RefSpecs()
     Commands.Fetch(
         repo,
         "origin",
@@ -33,6 +32,17 @@ def fetch_repo(name):
         FetchOptions(),
         "",
     )
+
+
+def pull_repo(name):
+    print(f"INFO: git pull: {name}")
+    target_path = PROG_DATA / name
+    repo = Repository(str(target_path))
+    pull_opt = PullOptions()
+    now = System.DateTimeOffset.Now
+    sig =  Signature(Identity("merge", "merge"), now)
+    merge_result = Commands.Pull(repo, sig, pull_opt)
+    print(f"merge status: {merge_result.Status}")
 
 
 def create_rvt_addins(overwrite=False):
@@ -111,7 +121,7 @@ print(col.bold_green("\nwelcome to Erne Holzbau pyRevit installer!"))
 for repo_name, url in REPOS.items():
     print(f"\n_____ {col.cyan(repo_name)}")
     clone_repo(repo_name, url)
-    fetch_repo(repo_name)
+    pull_repo(repo_name)
 
 create_pyrevit_config()
 create_rvt_addins()
