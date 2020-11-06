@@ -5,7 +5,7 @@ clr.AddReference("System.Collections")
 from System.Collections.Generic import List
 clr.AddReference("LibGit2Sharp")
 from LibGit2Sharp import Repository, Commands
-from LibGit2Sharp import FetchOptions, PullOptions
+from LibGit2Sharp import FetchOptions, PullOptions, StatusOptions
 from LibGit2Sharp import Signature, Identity
 from pathlib import Path
 import colorful as col
@@ -43,6 +43,14 @@ def pull_repo(name):
     sig =  Signature(Identity("merge", "merge"), now)
     merge_result = Commands.Pull(repo, sig, pull_opt)
     print(f"merge status: {merge_result.Status}")
+
+
+def status_repo(name):
+    print("INFO: git status: {}".format(name))
+    target_path = PROG_DATA / name
+    repo = Repository(str(target_path))
+    status = repo.RetrieveStatus(StatusOptions())
+    print("repo is clean: {}".format(not status.IsDirty))
 
 
 def create_rvt_addins(overwrite=False):
