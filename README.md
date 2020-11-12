@@ -1,5 +1,9 @@
 # pyrevit_installer
-non-admin installer of Erne Holzbau pyRevit
+non-admin installer for Erne Holzbau version of pyRevit.
+
+## download & install
+download installer pyRevit_installer.exe from [latest release](https://github.com/erneagholzbau/pyrevit_installer/releases/latest) 
+and install with a simple double click.
 
 ## build standalone exe with pyinstaller
 needed dependencies in directory /deps:
