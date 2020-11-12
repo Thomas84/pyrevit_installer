@@ -1,6 +1,8 @@
 # ignore pycharm files
 **/.idea
 
+# colorful rgb info
+deps/rgb.txt
 
 # git dependencies
 git2-106a5f2.dll
