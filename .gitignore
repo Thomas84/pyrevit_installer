@@ -1,7 +1,7 @@
 # ignore pycharm files
 **/.idea
 
-.venv
+venv
 
 # Release and installer files
 dist/
