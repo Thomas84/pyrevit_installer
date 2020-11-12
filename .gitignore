@@ -1,6 +1,12 @@
 # ignore pycharm files
 **/.idea
 
+
+# git dependencies
+git2-106a5f2.dll
+LibGit2Sharp.dll
+
+# virtualenvs
 venv
 
 # Release and installer files
